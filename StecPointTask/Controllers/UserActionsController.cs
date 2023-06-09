@@ -2,12 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
-using MediatR;
 using Serilog;
 using StacPointTask.BL.Interfaces;
 using StacPointTask.BL.Models;
-using StecPointTask.MediatrCommands;
-using StecPointTask.MQ.MQInterfaces;
 
 namespace StecPointTask.Controllers
 {
@@ -16,17 +13,10 @@ namespace StecPointTask.Controllers
     public class UserActionsController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IProducerInterface _mqProducer;
-        private readonly IMediator _mediatR;
         
-
-        public UserActionsController(IUserService userService, 
-                                    IProducerInterface producerInterface, 
-                                    IMediator mediatR)
+        public UserActionsController(IUserService userService)
         {
             _userService = userService;
-            _mqProducer = producerInterface;
-            _mediatR = mediatR;
         }
 
         [HttpPost]
@@ -35,22 +25,18 @@ namespace StecPointTask.Controllers
         {
             try
             {
-                await _mediatR.Send(new CreateUserCommand
-                {
-                    User = userModel
-                });
+                await _userService.Create(userModel);
                 Log.Information($"Информация о пользователе {userModel.FirstName} {userModel.LastName} сохранена в базе данных");
-                await _mqProducer.Publish(userModel);
-                Log.Information($"Информация о пользователе {userModel.FirstName} {userModel.LastName} успешно отправлена в очередь сообщений");
-
             }
             catch (WebException e)
             {
-                Log.Fatal("Произошла WEB ошибка", e.Message);
+                Log.Error("Произошла WEB ошибка: {0}", e.Message);
+                throw;
             }
             catch (Exception e)
             {
-                Log.Fatal("Произошла ошибка", e.Message);
+                Log.Error("Произошла ошибка: {0}", e.Message);
+                throw;
             }
 
             return Ok();
@@ -67,14 +53,16 @@ namespace StecPointTask.Controllers
             }
             catch (WebException e)
             {
-                Log.Fatal($"Произошла WEB ошибка: {e.Message}");
+                Log.Error("Произошла WEB ошибка: {0}", e.Message);
+                throw;
             }
             catch (Exception e)
             {
-                Log.Fatal($"Произошла ошибка: {e.Message}");
+                Log.Error("Произошла ошибка: {0}", e.Message);
+                throw;
             }
 
-            return Ok(StatusCode(204));
+            return Ok();
         }
     }
 }

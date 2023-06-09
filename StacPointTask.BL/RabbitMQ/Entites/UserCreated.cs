@@ -1,4 +1,4 @@
-﻿namespace StecPointTask.MQ.Enities
+﻿namespace StacPointTask.BL.RabbitMQ.Entites
 {
     public interface UserCreated
     {

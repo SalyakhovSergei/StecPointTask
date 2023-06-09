@@ -6,6 +6,7 @@ using MassTransit.Initializers;
 using Serilog;
 using StacPointTask.BL.Interfaces;
 using StacPointTask.BL.Models;
+using StacPointTask.BL.RabbitMQ.Interfaces;
 using StecPointTask.Data.DTO;
 using StecPointTask.Data.Interfaces;
 
@@ -15,21 +16,27 @@ namespace StacPointTask.BL.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly IRabbitMQInterface _mqRabbitMq;
 
         public UserService(IUserRepository userRepository, 
-                            IMapper mapper)
+                            IMapper mapper, 
+                            IRabbitMQInterface mqRabbitMq)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _mqRabbitMq = mqRabbitMq;
         }
 
-        public async Task<int> Create(UserModel user)
+        public async Task Create(UserModel user)
         {
             var model = _mapper.Map<UserDto>(user);
 
             Log.Information($"Информация о пользователе {user.FirstName} {user.LastName} отправлена в базу данных");
 
-            return await _userRepository.Create(model);
+            await _mqRabbitMq.Publish(user);
+            Log.Information($"Информация о пользователе {user.FirstName} {user.LastName} успешно отправлена в очередь сообщений");
+
+            await _userRepository.Create(model);
         }
 
         public async Task<Dictionary<string, List<UserModel>>> GetUsersByOrganization()
@@ -45,7 +52,6 @@ namespace StacPointTask.BL.Services
             }).ToDictionary(r=>r.Organization, w=>w.Users.Select(e=> _mapper.Map<UserModel>(e)).ToList());
 
             return usersByOrganization;
-
         }
     }
 }

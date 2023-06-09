@@ -7,7 +7,7 @@ namespace StacPointTask.BL.Interfaces
 {
     public interface IUserService
     {
-        Task<int> Create(UserModel user);
+        Task Create(UserModel user);
         Task <Dictionary<string, List<UserModel>>> GetUsersByOrganization();
     }
 }

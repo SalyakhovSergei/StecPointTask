@@ -10,8 +10,8 @@ using StecPointTask.Data;
 namespace StecPointTask.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20221125091105_UpdateTablesNames")]
-    partial class UpdateTablesNames
+    [Migration("20230609072729_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

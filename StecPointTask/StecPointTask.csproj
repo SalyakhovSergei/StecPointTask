@@ -15,8 +15,6 @@
     <PackageReference Include="MassTransit" Version="8.0.8" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.8" />
-    <PackageReference Include="MediatR" Version="11.1.0" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="5.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.7" />
@@ -36,11 +34,9 @@
   <ItemGroup>
     <ProjectReference Include="..\StacPointTask.BL\StacPointTask.BL.csproj" />
     <ProjectReference Include="..\StecPointTask.Data\StecPointTask.Data.csproj" />
-    <ProjectReference Include="..\StecPointTask.MQ\StecPointTask.MQ.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="MediatrCommands\" />
     <Folder Include="RequestModels\" />
   </ItemGroup>
 

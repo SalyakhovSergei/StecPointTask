@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Folder Include="Enities\" />
+    <Folder Include="MQInterfaces\" />
     <Folder Include="MQServices\" />
   </ItemGroup>
 

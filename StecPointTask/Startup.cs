@@ -13,9 +13,8 @@ using StecPointTask.Data.Repositories;
 using AutoMapper;
 using MassTransit;
 using StacPointTask.BL.Mapping;
-using StecPointTask.MQ.MQInterfaces;
-using StecPointTask.MQ.MQServices;
-using MediatR;
+using StacPointTask.BL.RabbitMQ.Interfaces;
+using StacPointTask.BL.RabbitMQ.Services;
 
 namespace StecPointTask
 {
@@ -41,9 +40,9 @@ namespace StecPointTask
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
 
-            services.AddSingleton<IUserRepository, UserRepository>();
-            services.AddSingleton<IUserService, UserService>();
-            services.AddScoped<IProducerInterface, ProducerService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRabbitMQInterface, RabbitMqService>();
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection), ServiceLifetime.Singleton);
@@ -57,9 +56,6 @@ namespace StecPointTask
             {
                 x.UsingRabbitMq();
             });
-
-            services.AddMediatR(typeof(Startup));
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

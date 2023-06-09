@@ -2,16 +2,16 @@
 using MassTransit;
 using Serilog;
 using StacPointTask.BL.Models;
-using StecPointTask.MQ.Enities;
-using StecPointTask.MQ.MQInterfaces;
+using StacPointTask.BL.RabbitMQ.Entites;
+using StacPointTask.BL.RabbitMQ.Interfaces;
 
-namespace StecPointTask.MQ.MQServices
+namespace StacPointTask.BL.RabbitMQ.Services
 {
-    public class ProducerService: IProducerInterface
+    public class RabbitMqService: IRabbitMQInterface
     {
         private readonly IPublishEndpoint _publishEndpoint;
 
-        public ProducerService(IPublishEndpoint publishEndpoint)
+        public RabbitMqService(IPublishEndpoint publishEndpoint)
         {
             _publishEndpoint = publishEndpoint;
         }
